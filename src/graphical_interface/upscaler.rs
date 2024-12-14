@@ -1,5 +1,3 @@
-use rayon::iter::{IntoParallelIterator, ParallelIterator};
-
 const LEFT: (i32, i32) = (-1, 0);
 const RIGHT: (i32, i32) = (1, 0);
 const UP: (i32, i32) = (0, -1);
