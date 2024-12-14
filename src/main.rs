@@ -33,7 +33,7 @@ lazy_static::lazy_static! {
 
 const BORDER_WIDTH: XY<usize> = XY::new(2, 1);
 const WINDOW_RESOLUTION: XY<usize> = XY::new(160, 40);
-const FPS_LIMIT: f32 = 60.0; // may be buggy above ~46
+const FPS_LIMIT: f32 = 30.0; // may be buggy above ~46
 const SPEEDUP_RATE: f32 = 1.0003;
 
 fn main() {
