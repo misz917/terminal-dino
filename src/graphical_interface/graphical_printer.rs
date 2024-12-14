@@ -1,3 +1,4 @@
+use rayon::prelude::*;
 use std::{
     sync::mpsc::Sender,
     time::{SystemTime, UNIX_EPOCH},
@@ -89,17 +90,19 @@ fn bools_to_rgb(bitmap: &Bitmap<bool>) -> Vec<u32> {
         .as_millis() as f64
         / 1000.0;
 
-    for y in 0..bitmap.resolution.y {
-        for x in 0..bitmap.resolution.x {
-            let index = y * bitmap.resolution.x + x;
+    output
+        .par_iter_mut()
+        .enumerate()
+        .for_each(|(index, pixel)| {
+            let x = index % bitmap.resolution.x;
+            let y = index / bitmap.resolution.x;
 
-            output[index] = if bitmap.matrix[y][x] {
+            *pixel = if bitmap.matrix[y][x] {
                 (0xFF0000 + (d.sin() * 255.0) as u32) as u32
             } else {
                 0x000000 // Empty space
             };
-        }
-    }
+        });
 
     output
 }
