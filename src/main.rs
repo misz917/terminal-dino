@@ -1,8 +1,3 @@
-use graphical_interface::{
-    graphical_buffer::GraphicalBuffer, graphical_printer::GraphicalPrinter,
-    graphical_screen::GraphicalScreen,
-};
-
 use crate::{
     bitmap_utils::bitmap::Bitmap,
     game_controller::GameController,
@@ -10,17 +5,14 @@ use crate::{
     task_scheduler::TaskScheduler,
     utils::XY,
     view::View,
-    window_setup::{
-        terminal_screen::TerminalHelper,
-        window::{GnomeTerminal, Terminal, WindowCreator},
-    },
 };
-use std::{
-    sync::{
-        mpsc::{self, Receiver, Sender},
-        Mutex,
-    },
-    thread::{self},
+use graphical_interface::{
+    graphical_buffer::GraphicalBuffer, graphical_printer::GraphicalPrinter,
+    graphical_screen::GraphicalScreen,
+};
+use std::sync::{
+    mpsc::{self, Receiver, Sender},
+    Mutex,
 };
 
 pub mod asset_server;
@@ -45,19 +37,14 @@ const FPS_LIMIT: f32 = 60.0; // may be buggy above ~46
 const SPEEDUP_RATE: f32 = 1.0003;
 
 fn main() {
-    let gnome_window = GnomeTerminal::new();
-
     let (tx, rx): (Sender<char>, Receiver<char>) = mpsc::channel();
-    thread::spawn(move || loop {
-        let input = gnome_window.read_key();
-        if let Some(pressed_key) = input {
-            tx.send(pressed_key).unwrap();
-        }
-    });
 
     let asset_path = "/home/user/Codes/GithubRepos/uni-console-dino/src/assets/";
     let buffer = GraphicalBuffer::new(&Bitmap::new(WINDOW_RESOLUTION, ' '));
-    let printer = GraphicalPrinter::new(XY::new(WINDOW_RESOLUTION.x * 8, WINDOW_RESOLUTION.y * 18));
+    let printer = GraphicalPrinter::new(
+        XY::new(WINDOW_RESOLUTION.x * 8, WINDOW_RESOLUTION.y * 18),
+        tx,
+    );
     let view = View::new(asset_path, ' ');
     let screen = GraphicalScreen::new(buffer, printer, BORDER_WIDTH);
     let task_scheduler = TaskScheduler::new();

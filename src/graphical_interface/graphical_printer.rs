@@ -1,3 +1,5 @@
+use std::sync::mpsc::Sender;
+
 use super::upscaler::upscale;
 use crate::{
     asset_server::TRANSPARENT_CHAR,
@@ -5,10 +7,11 @@ use crate::{
     utils::XY,
     WINDOW_RESOLUTION,
 };
-use minifb::{Window, WindowOptions};
+use minifb::{Key, Window, WindowOptions};
 
 pub struct GraphicalPrinter {
     window: Window,
+    tx: Sender<char>,
 }
 impl Printer for GraphicalPrinter {
     fn print(&mut self, bitmap: &Bitmap<char>, _border_width: &XY<usize>) {
@@ -26,9 +29,29 @@ impl Printer for GraphicalPrinter {
 }
 
 impl GraphicalPrinter {
-    pub fn new(resolution: XY<usize>) -> Self {
+    pub fn new(resolution: XY<usize>, tx: Sender<char>) -> Self {
         GraphicalPrinter {
             window: Window::new("", resolution.x, resolution.y, WindowOptions::default()).unwrap(),
+            tx,
+        }
+    }
+
+    pub fn read_keys(&mut self) {
+        let keys = self.window.get_keys();
+        if keys.len() == 0 {
+            return;
+        };
+        match keys[0] {
+            Key::W => {
+                let _ = self.tx.send('w');
+            }
+            Key::S => {
+                let _ = self.tx.send('s');
+            }
+            Key::D => {
+                let _ = self.tx.send('d');
+            }
+            _ => {}
         }
     }
 }

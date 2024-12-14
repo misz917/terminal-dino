@@ -17,19 +17,19 @@ use crate::{
     FPS_LIMIT, WINDOW_RESOLUTION,
 };
 
-pub struct GameController<B: BufferManager, P: Printer> {
+pub struct GameController<B: BufferManager> {
     frame_counter: u32,
     view: View,
-    screen: GraphicalScreen<B, P>,
+    screen: GraphicalScreen<B>,
     rx: Receiver<char>,
     active_state: GameStateEnum,
     task_scheduler: TaskScheduler,
     resources: HashMap<String, Value>,
 }
-impl<B: BufferManager, P: Printer> GameController<B, P> {
+impl<B: BufferManager> GameController<B> {
     pub fn new(
         view: View,
-        screen: GraphicalScreen<B, P>,
+        screen: GraphicalScreen<B>,
         rx: Receiver<char>,
         default_game_state: GameStateEnum,
         task_scheduler: TaskScheduler,
@@ -72,6 +72,8 @@ impl<B: BufferManager, P: Printer> GameController<B, P> {
         loop {
             let timer = SystemTime::now();
             self.display_frame_counter();
+
+            self.screen.printer.read_keys();
 
             if let Ok(input) = self.rx.try_recv() {
                 self.active_state.as_state().handle_input(

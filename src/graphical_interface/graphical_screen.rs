@@ -4,12 +4,14 @@ use crate::{
     window_setup::terminal_screen::Screen,
 };
 
-pub struct GraphicalScreen<B: BufferManager, P: Printer> {
+use super::graphical_printer::GraphicalPrinter;
+
+pub struct GraphicalScreen<B: BufferManager> {
     buffer: B,
-    printer: P,
+    pub printer: GraphicalPrinter,
     border_width: XY<usize>,
 }
-impl<B: BufferManager, P: Printer> Screen for GraphicalScreen<B, P> {
+impl<B: BufferManager> Screen for GraphicalScreen<B> {
     fn schedule_frame(&mut self, new_frame: Box<Bitmap<char>>) {
         self.buffer.insert_frame(new_frame);
     }
@@ -23,8 +25,8 @@ impl<B: BufferManager, P: Printer> Screen for GraphicalScreen<B, P> {
     fn prepare() {}
 }
 
-impl<B: BufferManager, P: Printer> GraphicalScreen<B, P> {
-    pub fn new(buffer: B, printer: P, border_width: XY<usize>) -> Self {
+impl<B: BufferManager> GraphicalScreen<B> {
+    pub fn new(buffer: B, printer: GraphicalPrinter, border_width: XY<usize>) -> Self {
         GraphicalScreen {
             buffer,
             printer,
