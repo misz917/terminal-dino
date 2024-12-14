@@ -24,6 +24,7 @@ pub mod collision_detector;
 pub mod drawable_objects;
 pub mod game_controller;
 pub mod game_states;
+pub mod graphical_interface;
 pub mod task_scheduler;
 pub mod utils;
 pub mod view;
