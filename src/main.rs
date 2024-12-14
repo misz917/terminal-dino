@@ -1,12 +1,17 @@
+use graphical_interface::{
+    graphical_buffer::GraphicalBuffer, graphical_printer::GraphicalPrinter,
+    graphical_screen::GraphicalScreen,
+};
+
 use crate::{
-    bitmap_utils::{bitmap::Bitmap, bitmap_buffer::BitmapBuffer, bitmap_printer::BitmapPrinter},
+    bitmap_utils::bitmap::Bitmap,
     game_controller::GameController,
     game_states::{game_state::GameStateEnum, menu::Menu},
     task_scheduler::TaskScheduler,
     utils::XY,
     view::View,
     window_setup::{
-        terminal_screen::{TerminalHelper, TerminalScreen},
+        terminal_screen::TerminalHelper,
         window::{GnomeTerminal, Terminal, WindowCreator},
     },
 };
@@ -41,9 +46,6 @@ const SPEEDUP_RATE: f32 = 1.0003;
 
 fn main() {
     let gnome_window = GnomeTerminal::new();
-    WindowCreator::create_separate_window(WINDOW_RESOLUTION, BORDER_WIDTH, &gnome_window);
-    gnome_window.set_raw_mode();
-    TerminalHelper::prepare_terminal();
 
     let (tx, rx): (Sender<char>, Receiver<char>) = mpsc::channel();
     thread::spawn(move || loop {
@@ -54,9 +56,10 @@ fn main() {
     });
 
     let asset_path = "/home/user/Codes/GithubRepos/uni-console-dino/src/assets/";
-    let bitmap_buffer = BitmapBuffer::new(&Bitmap::new(WINDOW_RESOLUTION, '$'));
+    let buffer = GraphicalBuffer::new(&Bitmap::new(WINDOW_RESOLUTION, ' '));
+    let printer = GraphicalPrinter::new(WINDOW_RESOLUTION);
     let view = View::new(asset_path, ' ');
-    let screen = TerminalScreen::new(bitmap_buffer, BitmapPrinter, BORDER_WIDTH);
+    let screen = GraphicalScreen::new(buffer, printer, BORDER_WIDTH);
     let task_scheduler = TaskScheduler::new();
     let mut game_controller = GameController::new(
         view,
