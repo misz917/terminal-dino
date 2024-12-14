@@ -9,17 +9,18 @@ use crate::{
     bitmap_utils::{bitmap_buffer::BufferManager, bitmap_printer::Printer},
     drawable_objects::{drawable_object::DrawableObject, label::Label},
     game_states::game_state::GameStateEnum,
+    graphical_interface::graphical_screen::GraphicalScreen,
     task_scheduler::TaskScheduler,
     utils::{Value, XY},
     view::View,
-    window_setup::terminal_screen::TerminalScreen,
+    window_setup::terminal_screen::Screen,
     FPS_LIMIT, WINDOW_RESOLUTION,
 };
 
 pub struct GameController<B: BufferManager, P: Printer> {
     frame_counter: u32,
     view: View,
-    screen: TerminalScreen<B, P>,
+    screen: GraphicalScreen<B, P>,
     rx: Receiver<char>,
     active_state: GameStateEnum,
     task_scheduler: TaskScheduler,
@@ -28,7 +29,7 @@ pub struct GameController<B: BufferManager, P: Printer> {
 impl<B: BufferManager, P: Printer> GameController<B, P> {
     pub fn new(
         view: View,
-        screen: TerminalScreen<B, P>,
+        screen: GraphicalScreen<B, P>,
         rx: Receiver<char>,
         default_game_state: GameStateEnum,
         task_scheduler: TaskScheduler,
