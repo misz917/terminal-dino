@@ -1,3 +1,4 @@
+use super::upscaler::upscale;
 use crate::{
     asset_server::TRANSPARENT_CHAR,
     bitmap_utils::{bitmap::Bitmap, bitmap_printer::Printer},
@@ -11,10 +12,16 @@ pub struct GraphicalPrinter {
 }
 impl Printer for GraphicalPrinter {
     fn print(&mut self, bitmap: &Bitmap<char>, _border_width: &XY<usize>) {
-        let buffer = bools_to_rgb(&chars_to_pixels(&bitmap));
+        let pixels = &chars_to_pixels(&bitmap);
+        let upscaled_pixels = upscale(pixels.matrix.clone(), 1);
+        let bitmap = Bitmap {
+            resolution: XY::new(upscaled_pixels[0].len(), upscaled_pixels.len()),
+            matrix: upscaled_pixels,
+        };
+        let rgb = bools_to_rgb(&bitmap);
         let _ = self
             .window
-            .update_with_buffer(&buffer, bitmap.resolution.x, bitmap.resolution.y);
+            .update_with_buffer(&rgb, bitmap.resolution.x, bitmap.resolution.y);
     }
 }
 

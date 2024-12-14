@@ -57,7 +57,7 @@ fn main() {
 
     let asset_path = "/home/user/Codes/GithubRepos/uni-console-dino/src/assets/";
     let buffer = GraphicalBuffer::new(&Bitmap::new(WINDOW_RESOLUTION, ' '));
-    let printer = GraphicalPrinter::new(WINDOW_RESOLUTION);
+    let printer = GraphicalPrinter::new(XY::new(WINDOW_RESOLUTION.x * 8, WINDOW_RESOLUTION.y * 18));
     let view = View::new(asset_path, ' ');
     let screen = GraphicalScreen::new(buffer, printer, BORDER_WIDTH);
     let task_scheduler = TaskScheduler::new();
