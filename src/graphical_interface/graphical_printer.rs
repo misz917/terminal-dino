@@ -8,7 +8,6 @@ use crate::{
     asset_server::TRANSPARENT_CHAR,
     bitmap_utils::{bitmap::Bitmap, bitmap_printer::Printer},
     utils::XY,
-    WINDOW_RESOLUTION,
 };
 use minifb::{Key, Window, WindowOptions};
 
