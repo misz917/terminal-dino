@@ -1,4 +1,7 @@
-use std::sync::mpsc::Sender;
+use std::{
+    sync::mpsc::Sender,
+    time::{Instant, SystemTime, UNIX_EPOCH},
+};
 
 use super::upscaler::upscale;
 use crate::{
@@ -78,9 +81,14 @@ fn bools_to_rgb(bitmap: &Bitmap<bool>) -> Vec<u32> {
             let index = y * bitmap.resolution.x + x;
 
             output[index] = if bitmap.matrix[y][x] {
-                0xFFFFFF // Pixel (white)
+                let d = SystemTime::now()
+                    .duration_since(UNIX_EPOCH)
+                    .unwrap()
+                    .as_millis() as f64
+                    / 1000.0;
+                (0xFF0000 + (d.sin() * 255.0) as u32) as u32
             } else {
-                0x000000 // Empty space (black)
+                0x000000 // Empty space
             };
         }
     }
