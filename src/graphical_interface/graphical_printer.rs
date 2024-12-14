@@ -1,6 +1,6 @@
 use std::{
     sync::mpsc::Sender,
-    time::{Instant, SystemTime, UNIX_EPOCH},
+    time::{SystemTime, UNIX_EPOCH},
 };
 
 use super::upscaler::upscale;
