@@ -1,3 +1,5 @@
+use rayon::iter::{IntoParallelIterator, ParallelIterator};
+
 const LEFT: (i32, i32) = (-1, 0);
 const RIGHT: (i32, i32) = (1, 0);
 const UP: (i32, i32) = (0, -1);
@@ -13,16 +15,15 @@ pub fn upscale(rgba_values: Vec<Vec<bool>>, strength: u8) -> Vec<Vec<bool>> {
 
 fn upscale_boilerplate(img: &Vec<Vec<bool>>) -> Vec<Vec<bool>> {
     let height = img.len();
-    let width = if height > 0 { img[0].len() } else { 0 };
-
+    let width = img[0].len();
     let mut modified_img = vec![vec![false; width * 2]; height * 2];
 
+    let directions = [(LEFT, UP), (UP, RIGHT), (RIGHT, DOWN), (DOWN, LEFT)];
     for y in 0..height {
         for x in 0..width {
-            modified_img[y * 2][x * 2] = get_new_pixel(&[LEFT, UP], x, y, img);
-            modified_img[y * 2][x * 2 + 1] = get_new_pixel(&[UP, RIGHT], x, y, img);
-            modified_img[y * 2 + 1][x * 2 + 1] = get_new_pixel(&[RIGHT, DOWN], x, y, img);
-            modified_img[y * 2 + 1][x * 2] = get_new_pixel(&[DOWN, LEFT], x, y, img);
+            for (i, &(dx, dy)) in directions.iter().enumerate() {
+                modified_img[y * 2 + i / 2][x * 2 + i % 2] = get_new_pixel(&[dx, dy], x, y, img);
+            }
         }
     }
 
