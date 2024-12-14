@@ -6,12 +6,12 @@ use crate::{
 use super::bitmap::Bitmap;
 
 pub trait Printer {
-    fn print(&self, bitmap: &Bitmap<char>, border_width: &XY<usize>);
+    fn print(&mut self, bitmap: &Bitmap<char>, border_width: &XY<usize>);
 }
 
 pub struct BitmapPrinter;
 impl Printer for BitmapPrinter {
-    fn print(&self, bitmap: &Bitmap<char>, border_width: &XY<usize>) {
+    fn print(&mut self, bitmap: &Bitmap<char>, border_width: &XY<usize>) {
         for (i, row) in bitmap.matrix.iter().enumerate() {
             for (j, item) in row.iter().enumerate() {
                 if *item == TRANSPARENT_CHAR {

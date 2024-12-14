@@ -1,11 +1,10 @@
 use crate::{
-    asset_server::TRANSPARENT_CHAR, bitmap_utils::bitmap::Bitmap, utils::XY, WINDOW_RESOLUTION,
+    asset_server::TRANSPARENT_CHAR,
+    bitmap_utils::{bitmap::Bitmap, bitmap_printer::Printer},
+    utils::XY,
+    WINDOW_RESOLUTION,
 };
 use minifb::{Window, WindowOptions};
-
-pub trait Printer {
-    fn print(&mut self, bitmap: &Bitmap<char>, border_width: &XY<usize>);
-}
 
 pub struct GraphicalPrinter {
     window: Window,
@@ -13,7 +12,8 @@ pub struct GraphicalPrinter {
 impl Printer for GraphicalPrinter {
     fn print(&mut self, bitmap: &Bitmap<char>, _border_width: &XY<usize>) {
         let buffer = bools_to_rgb(&chars_to_pixels(&bitmap));
-        self.window
+        let _ = self
+            .window
             .update_with_buffer(&buffer, bitmap.resolution.x, bitmap.resolution.y);
     }
 }
