@@ -83,16 +83,17 @@ fn chars_to_pixels(bitmap: &Bitmap<char>) -> Bitmap<bool> {
 fn bools_to_rgb(bitmap: &Bitmap<bool>) -> Vec<u32> {
     let mut output: Vec<u32> = vec![0; bitmap.resolution.x * bitmap.resolution.y];
 
+    let d = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .unwrap()
+        .as_millis() as f64
+        / 1000.0;
+
     for y in 0..bitmap.resolution.y {
         for x in 0..bitmap.resolution.x {
             let index = y * bitmap.resolution.x + x;
 
             output[index] = if bitmap.matrix[y][x] {
-                let d = SystemTime::now()
-                    .duration_since(UNIX_EPOCH)
-                    .unwrap()
-                    .as_millis() as f64
-                    / 1000.0;
                 (0xFF0000 + (d.sin() * 255.0) as u32) as u32
             } else {
                 0x000000 // Empty space
