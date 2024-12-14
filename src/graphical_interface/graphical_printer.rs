@@ -3,7 +3,7 @@ use std::{
     time::{SystemTime, UNIX_EPOCH},
 };
 
-use super::upscaler::upscale;
+use super::{char_to_pixels::char_to_5x5, upscaler::upscale};
 use crate::{
     asset_server::TRANSPARENT_CHAR,
     bitmap_utils::{bitmap::Bitmap, bitmap_printer::Printer},
@@ -19,7 +19,7 @@ pub struct GraphicalPrinter {
 impl Printer for GraphicalPrinter {
     fn print(&mut self, bitmap: &Bitmap<char>, _border_width: &XY<usize>) {
         let pixels = &chars_to_pixels(&bitmap);
-        let upscaled_pixels = upscale(pixels.matrix.clone(), 2);
+        let upscaled_pixels = upscale(pixels.matrix.clone(), 0);
         let bitmap = Bitmap {
             resolution: XY::new(upscaled_pixels[0].len(), upscaled_pixels.len()),
             matrix: upscaled_pixels,
@@ -60,13 +60,21 @@ impl GraphicalPrinter {
 }
 
 fn chars_to_pixels(bitmap: &Bitmap<char>) -> Bitmap<bool> {
-    let mut output: Bitmap<bool> = Bitmap::new(WINDOW_RESOLUTION, false);
+    let mut output: Bitmap<bool> = Bitmap::new(
+        XY::new(bitmap.resolution.x * 5, bitmap.resolution.y * 5),
+        false,
+    );
     for (i, row) in bitmap.matrix.iter().enumerate() {
         for (j, item) in row.iter().enumerate() {
             if *item == TRANSPARENT_CHAR || *item == ' ' {
                 continue;
-            } else {
-                output.matrix[i][j] = true;
+            }
+            if let Some(arr) = char_to_5x5(*item) {
+                for dx in 0..5 {
+                    for dy in 0..5 {
+                        output.matrix[i * 5 + dx][j * 5 + dy] = arr[dx][dy];
+                    }
+                }
             }
         }
     }
