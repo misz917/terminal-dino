@@ -6,7 +6,7 @@ use std::{
 };
 
 use crate::{
-    bitmap_utils::{bitmap_buffer::BufferManager, bitmap_printer::Printer},
+    bitmap_utils::bitmap_buffer::BufferManager,
     drawable_objects::{drawable_object::DrawableObject, label::Label},
     game_states::game_state::GameStateEnum,
     graphical_interface::graphical_screen::GraphicalScreen,
