@@ -37,7 +37,7 @@ impl GraphicalPrinter {
     }
 
     pub fn read_keys(&mut self) {
-        let keys = self.window.get_keys();
+        let keys = self.window.get_keys_pressed(minifb::KeyRepeat::No);
         if keys.len() == 0 {
             return;
         };
