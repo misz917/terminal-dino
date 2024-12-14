@@ -39,11 +39,34 @@ impl TerminalHelper {
     }
 }
 
+pub trait Screen {
+    fn schedule_frame(&mut self, new_frame: Box<Bitmap<char>>);
+    fn display_frame(&mut self);
+    fn prepare();
+}
+
 pub struct TerminalScreen<B: BufferManager, P: Printer> {
     buffer: B,
     printer: P,
     border_width: XY<usize>,
 }
+impl<B: BufferManager, P: Printer> Screen for TerminalScreen<B, P> {
+    fn schedule_frame(&mut self, new_frame: Box<Bitmap<char>>) {
+        self.buffer.insert_frame(new_frame);
+    }
+
+    fn display_frame(&mut self) {
+        if let Some(frame) = self.buffer.get_frame() {
+            self.printer.print(&frame, &self.border_width);
+        }
+        TerminalHelper::flush_terminal_buffer();
+    }
+
+    fn prepare() {
+        TerminalHelper::prepare_terminal();
+    }
+}
+
 impl<B: BufferManager, P: Printer> TerminalScreen<B, P> {
     pub fn new(buffer: B, printer: P, border_width: XY<usize>) -> Self {
         TerminalScreen {
@@ -51,20 +74,5 @@ impl<B: BufferManager, P: Printer> TerminalScreen<B, P> {
             printer,
             border_width,
         }
-    }
-
-    pub fn schedule_frame(&mut self, new_frame: Box<Bitmap<char>>) {
-        self.buffer.insert_frame(new_frame);
-    }
-
-    pub fn display_frame(&mut self) {
-        if let Some(frame) = self.buffer.get_frame() {
-            self.printer.print(&frame, &self.border_width);
-        }
-        TerminalHelper::flush_terminal_buffer();
-    }
-
-    pub fn prepare() {
-        TerminalHelper::prepare_terminal();
     }
 }
