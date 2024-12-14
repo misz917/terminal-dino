@@ -18,7 +18,7 @@ pub struct GraphicalPrinter {
 impl Printer for GraphicalPrinter {
     fn print(&mut self, bitmap: &Bitmap<char>, _border_width: &XY<usize>) {
         let pixels = &chars_to_pixels(&bitmap);
-        let upscaled_pixels = upscale(pixels.matrix.clone(), 0);
+        let upscaled_pixels = upscale(pixels.matrix.clone(), 1);
         let bitmap = Bitmap {
             resolution: XY::new(upscaled_pixels[0].len(), upscaled_pixels.len()),
             matrix: upscaled_pixels,
