@@ -32,7 +32,6 @@ impl BufferManager for GraphicalBuffer {
         self.following_frame = Some(new_frame);
     }
 
-    // generates a frame of transparent chars and differences between following and active
     fn get_frame(&mut self) -> Option<Box<Bitmap<char>>> {
         if let Some(following_frame) = &self.following_frame {
             let mut differences = *self.active_frame.clone();
