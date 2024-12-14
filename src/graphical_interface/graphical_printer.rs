@@ -9,6 +9,7 @@ use crate::{
     asset_server::TRANSPARENT_CHAR,
     bitmap_utils::{bitmap::Bitmap, bitmap_printer::Printer},
     utils::XY,
+    SMOOTHING_POWER,
 };
 use minifb::{Key, Window, WindowOptions};
 
@@ -19,7 +20,11 @@ pub struct GraphicalPrinter {
 impl Printer for GraphicalPrinter {
     fn print(&mut self, bitmap: &Bitmap<char>, _border_width: &XY<usize>) {
         let pixels = &chars_to_pixels(&bitmap);
-        let upscaled_pixels = upscale(pixels.matrix.clone(), 1);
+        let smoothing: u8;
+        {
+            smoothing = *SMOOTHING_POWER.lock().unwrap();
+        }
+        let upscaled_pixels = upscale(pixels.matrix.clone(), smoothing);
         let bitmap = Bitmap {
             resolution: XY::new(upscaled_pixels[0].len(), upscaled_pixels.len()),
             matrix: upscaled_pixels,

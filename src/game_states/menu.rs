@@ -5,19 +5,11 @@ use super::{
 use crate::{
     drawable_objects::{drawable_object::DrawableObject, label::Label, rectangle::Rectangle},
     task_scheduler::{Task, TaskScheduler},
-    utils::{Value, RGB, XY},
+    utils::{Value, XY},
     view::View,
-    window_setup::terminal_screen::TerminalHelper,
-    FPS_LIMIT, WINDOW_RESOLUTION,
+    FPS_LIMIT, SMOOTHING_POWER, WINDOW_RESOLUTION,
 };
 use std::{collections::HashMap, process::exit, time::Duration};
-
-const WHITE: RGB = RGB::new(255, 255, 255);
-const BLUE: RGB = RGB::new(10, 50, 150);
-const RED: RGB = RGB::new(255, 0, 0);
-const YELLOW: RGB = RGB::new(255, 255, 0);
-const GREEN: RGB = RGB::new(0, 255, 0);
-const PURPLE: RGB = RGB::new(255, 0, 255);
 
 #[derive(PartialEq, Eq, PartialOrd, Ord, Clone, Debug)]
 pub struct Menu;
@@ -118,7 +110,7 @@ impl GameState for Menu {
             None,
         );
 
-        let text = "Start game";
+        let text = "Start  game";
         view.insert_object(
             "start_game_label",
             2,
@@ -131,7 +123,7 @@ impl GameState for Menu {
             None,
         );
 
-        let text = "Change color scheme";
+        let text = "Change  smoothing";
         view.insert_object(
             "change_color_scheme_label",
             2,
@@ -196,16 +188,16 @@ impl GameState for Menu {
 fn set_color_scheme(num: i32) {
     match num {
         0 => {
-            TerminalHelper::set_character_color(WHITE);
-            TerminalHelper::set_background_color(BLUE);
+            let mut smoothing = SMOOTHING_POWER.lock().unwrap();
+            *smoothing = 0;
         }
         1 => {
-            TerminalHelper::set_character_color(RED);
-            TerminalHelper::set_background_color(YELLOW);
+            let mut smoothing = SMOOTHING_POWER.lock().unwrap();
+            *smoothing = 1;
         }
         2 => {
-            TerminalHelper::set_character_color(PURPLE);
-            TerminalHelper::set_background_color(GREEN);
+            let mut smoothing = SMOOTHING_POWER.lock().unwrap();
+            *smoothing = 2;
         }
         _ => (),
     }

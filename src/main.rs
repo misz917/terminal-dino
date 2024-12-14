@@ -29,6 +29,7 @@ pub mod window_setup;
 
 lazy_static::lazy_static! {
     static ref SPEED: Mutex<f32> = Mutex::new(1.0);
+    static ref SMOOTHING_POWER: Mutex<u8> = Mutex::new(0);
 }
 
 const BORDER_WIDTH: XY<usize> = XY::new(2, 1);
