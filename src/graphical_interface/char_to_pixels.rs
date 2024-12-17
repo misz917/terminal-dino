@@ -198,7 +198,7 @@ pub fn char_to_5x5(char: char) -> Option<[[bool; 5]; 5]> {
         '-' | '~' => [
             [false, false, false, false, false],
             [false, false, false, false, false],
-            [false, true, true, true, true],
+            [true, true, true, true, true],
             [false, false, false, false, false],
             [false, false, false, false, false],
         ],
