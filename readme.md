@@ -11,10 +11,10 @@ A simple ASCII-art game inspired by the Google Chrome browser dinosaur.
   Asynchronous, non-blocking user input system for smooth gameplay.
 
 - **Customizable Visuals**  
-  Supports multiple color palettes and animated ASCII graphics.
+  Supports animated ASCII graphics.
 
 - **Intuitive Interface**  
-  Clean and user-friendly terminal-based controls.
+  Clean and user-friendly controls.
 
 - **Progressive Difficulty**  
   Game speed gradually increases over time for added challenge.
@@ -26,4 +26,8 @@ A simple ASCII-art game inspired by the Google Chrome browser dinosaur.
   - Modify visual themes
 
 - **Optimized Performance**  
-  Lightweight design ensures smooth operation in terminal environments.
+  Lightweight design ensures smooth operation
+
+- **Additional Functions**
+  Display in a graphic window as opposed to a terminal
+  Simple graphic smoothing algorithm for more interesting visuals
